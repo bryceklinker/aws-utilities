@@ -2,10 +2,10 @@
 
 import yargs from 'yargs';
 import {bundle} from './bundler';
-import {logger} from './logger';
+import {logger} from './core/logger';
 
 const options = yargs
-    .usage('<filePath> <zipPath>')
+    .usage('<filePath> <zipPath> --babel-config <babelConfigPath>')
     .argv;
 
 // @ts-ignore

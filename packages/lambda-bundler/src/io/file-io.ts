@@ -25,4 +25,16 @@ function exists(filePath: string): Promise<boolean> {
     })
 }
 
-export const FileIO = {remove, exists};
+function readFile(filePath: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+        fs.readFile(filePath, 'utf8', (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        })
+    })
+}
+
+export const FileIO = {remove, exists, readFile};

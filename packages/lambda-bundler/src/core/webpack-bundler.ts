@@ -1,11 +1,18 @@
 import webpack, {Configuration} from 'webpack';
 import path from 'path';
 import {logger} from './logger';
-import {APP_NODE_MODULES} from './app-paths';
+import {APP_NODE_MODULES} from '../app-paths';
 
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 
-function makeWebpackConfig(name: string, filePath: string, output: string): Configuration {
+export interface MakeWebpackConfigOptions {
+    name: string;
+    filePath: string;
+    output: string;
+    babelConfig?: any;
+}
+
+export function makeWebpackConfig({name, filePath, output, babelConfig}: MakeWebpackConfigOptions): Configuration {
     return {
         entry: {
             [name]: filePath
@@ -16,6 +23,9 @@ function makeWebpackConfig(name: string, filePath: string, output: string): Conf
             library: '[name]',
             libraryTarget: 'umd'
         },
+        externals: [
+          'aws-sdk'
+        ],
         resolve: {
             modules: [
                 'node_modules',
@@ -37,7 +47,7 @@ function makeWebpackConfig(name: string, filePath: string, output: string): Conf
                     use: [
                         {
                             loader: require.resolve('babel-loader'),
-                            options: {}
+                            options: babelConfig || {}
                         }
                     ]
                 }
@@ -49,12 +59,13 @@ function makeWebpackConfig(name: string, filePath: string, output: string): Conf
 export interface ExecuteWebpackOptions {
     filePath: string;
     output: string;
+    babelConfig?: Object;
 }
 
-export function executeWebpack({filePath, output}: ExecuteWebpackOptions): Promise<string> {
+export function executeWebpack({filePath, output, babelConfig}: ExecuteWebpackOptions): Promise<string> {
     return new Promise((resolve, reject) => {
         const name = path.basename(filePath);
-        const config = makeWebpackConfig(name, filePath, output);
+        const config = makeWebpackConfig({name, filePath, output, babelConfig});
         webpack(config, (err, stats) => {
             if (err) {
                 reject(err);

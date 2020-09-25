@@ -1,0 +1,25 @@
+{
+  "name": "@aws-utilities/hydra",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build:express": "lambda-bundler ./src/express-lambda.js ./build/express-lambda.zip",
+    "build:sns": "lambda-bundler ./src/sns-lambda.js ./build/sns-lambda.zip",
+    "build": "concurrently \"yarn build:express\" \"yarn build:sns\"",
+    "start": "babel-node ./src/local.js"
+  },
+  "devDependencies": {
+    "@aws-utilities/lambda-bundler": "^0.0.0",
+    "@babel/core": "7.11.6",
+    "@babel/node": "7.10.5",
+    "@babel/preset-env": "7.11.5",
+    "concurrently": "5.3.0",
+    "express-winston": "4.0.5"
+  },
+  "dependencies": {
+    "aws-serverless-express": "3.3.8",
+    "express": "4.17.1",
+    "winston": "3.3.3"
+  }
+}
